@@ -787,38 +787,40 @@ This is the discussion referenced in Figure 2 of the poster, where the
 clone-weighted curve does not sit exactly at zero and its bias grows with the
 false-positive rate ε.
 
-**Why the residual bias is there.** Clone weighting and false-positive
-contamination are two different problems. Clone weighting resolves an
-*ambiguity*: a first positive whose confirming test never arrives is neither
-clearly an event nor clearly a non-event, and the two weighted clones recover, in
-expectation, the events that the confirmation rule would have counted with
-complete follow-up. What clone weighting does not do is change the event
-*definition*. Under that definition a run of two consecutive positives counts as
-a confirmed diagnosis even when both positives are false, which happens with
-probability of order ε² per pair of tests. The double-positive estimand is
-therefore contaminated in its own right, and any estimator that targets it,
-including the clone-weighted one, inherits that contamination. This is why the
-residual grows with ε while the bias from censored first-positives is removed at
-every retesting frequency.
+**Why the residual bias is there.** Clone weighting resolves an *ambiguity* about
+censored first-positive cases: a first positive whose following confirming test
+is never observed is neither a confirmed event nor a confirmed non-event. What
+clone weighting does not do is resolve the defects inherent in the event
+*definition* itself (the confirmation rule). Under this rule, a pair of
+consecutive positives is treated as a confirmed diagnosis even when both
+positives are false, which happens with probability of order ε² per pair of
+tests. The double-positive definition is defective in its own way, and any
+estimator targeting this definition, including the clone-weighted one, has this
+bias. This is why, in Figure 2 of the poster, the residual bias grows with ε
+while the bias from censored first-positives is removed.
+
+The same mechanism explains a feature of the naive double-positive estimator that
+might otherwise be mistaken for an improvement, as its bias decreases with ε. Two
+errors are at work in opposite directions. Discarding censored first-positives
+underestimates the event rate, spurious confirmations overestimate it, and only
+the second grows with ε. At larger ε the two nearly cancel, so the
+double-positive estimator lands closer to the truth, not because it is unbiased
+but because its two sources of error offset each other. Clone weighting removes
+the first error but leaves the second one exposed.
 
 **How it can be handled.** Specificity is routinely reported for diagnostic
-assays, so ε = 1 − specificity is often known or well approximated. When it is,
-the expected number of spurious confirmations is a computable function of ε and
-the observed test results, and it can be removed from the event counts before the
-survival curve is formed. This is an instance of the broader problem of outcome
-misclassification in time-to-event analysis, which has an established literature
-that the present setting can borrow from. Meier, Richardson, and Hughes (2003)
-develop discrete-time proportional hazards estimation when outcomes are
-mismeasured with known sensitivity and specificity. Balasubramanian and Lagakos
-(2003) estimate a failure time distribution directly from sequentially
-administered imperfect diagnostic tests. Where ε is not known externally, a
-validated subsample is the usual route.
+assays, so ε = 1 − specificity is often known or can be well approximated. When
+it is, the expected number of spurious confirmations is a function of ε and the
+observed test results, and it can be removed from the event counts so that they
+reflect only true positives. This belongs to the broader problem of outcome
+misclassification in time-to-event analysis, which has a rich literature of its
+own. When ε is not known externally, a validated subsample is the usual route.
 
-Working out this correction properly, including its behavior when ε is
-misspecified and how it interacts with the clone weights, is a separate line of
-work and is deliberately left out of this supplement.
+A detailed discussion of corrections for mismeasured outcomes, and of how they
+interact with the clone weights, is a separate line of work and is deliberately
+left out of this supplement.
 
-**References for this section**
+**Further reading**
 
 - Meier AS, Richardson BA, Hughes JP. Discrete proportional hazards models for
   mismeasured outcomes. *Biometrics.* 2003;59(4):947–954.
