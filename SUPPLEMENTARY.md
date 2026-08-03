@@ -764,20 +764,40 @@ coverage in simulation will be added here.
 
 ## 5. Estimating *pᵢ* *(placeholder)*
 
-> **Work in progress.** This section will discuss how the confirmation
-> probability *pᵢ* is estimated when it is not known, and the consequences for
-> the clone-weighted estimator.
+Whether *pᵢ* has to be estimated at all depends on the setting. In some
+applications the confirmation step is specified in advance, and *pᵢ* follows from
+that specification rather than from the data at hand.
 
-The poster and main simulation use the **oracle** *pᵢ* — the closed form derived
-in [`docs/true_p_i_derivation.md`](docs/true_p_i_derivation.md) — so that the
-figures isolate the clone-weighting *mechanism* from the separate problem of
-*estimating* the weight. In practice *pᵢ* must be obtained from data or an
-external model. A first pass at the data-driven route (the plug-in
-`p_hat_empirical()` and its caveats — single global value, MAR-style
-exchangeability, horizon selection, small-sample instability) is already sketched
-in §7 of that derivation note. A fuller treatment — modelled estimates,
-sensitivity to misspecification, and the cost of estimating *pᵢ* rather than
-knowing it — will be added here.
+Equipment fault monitoring is one such case. A fault is often logged only when an
+alarm repeats on the next inspection cycle, which is the same rule of two
+consecutive signals used here. A genuine fault persists, so it raises the alarm
+again with near certainty. An isolated alarm on a sound machine is a false alarm,
+and its rate is fixed by the sensor design and published by the manufacturer.
+Both parts of the confirmation probability are therefore known before any data
+are collected, and *pᵢ* can be read off the specification.
+
+Where the setting does not pin *pᵢ* down, an external data source often can. A
+validation sample, in which the confirming measurement is observed for everyone,
+reports the operating characteristics of the test directly: sensitivity,
+specificity, and the confirmation rate itself. Published prevalence for the true
+status supplies the remaining ingredient, which is how often a first positive is
+genuine rather than spurious. Assay validation studies, disease registries, and
+earlier cohorts followed long enough for confirmation to be observed are the
+usual sources.
+
+So *pᵢ* can come from either direction. It can be estimated inside the study at
+hand from the observed test results, or imported from external sources of the
+kind just described.
+
+The simulation of §2 does neither. There *pᵢ* is computed exactly from the closed
+form derived in
+[`docs/true_p_i_derivation.md`](docs/true_p_i_derivation.md), using the
+false-positive rate ε and the onset rate λ that generated the data. Both are
+known because we chose them. The simplification is deliberate: the figures are
+meant to show how clone-based weighting works, so the weight is held exact and
+the separate problem of estimating *pᵢ* is set aside. Any residual bias in the
+clone-weighted curve of Figure 2 is therefore a property of the event definition,
+discussed in §6, and not error in the weight.
 
 ---
 
