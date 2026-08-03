@@ -5,10 +5,10 @@ Poster — JSM 2026 (Boston, MA). Hongseok Kim, CSL Behring.
 
 This document collects the material that does not fit on the poster: the full
 reference list, a detailed description of the simulation settings and scenarios,
-and the complete simulation code. It closes with a discussion of the residual
-false-positive bias visible in Figure 2 of the poster. Two topics are flagged
-below as work in progress: inference for the proposed estimator, and how the
-confirmation probability *pᵢ* is estimated in practice.
+and the complete simulation code. It closes with a discussion of where the
+confirmation probability *pᵢ* comes from, and of the residual false-positive
+bias visible in Figure 2 of the poster. One topic is flagged below as work in
+progress: inference for the proposed estimator.
 
 **Contents**
 
@@ -16,7 +16,7 @@ confirmation probability *pᵢ* is estimated in practice.
 2. [Simulation settings and scenarios](#2-simulation-settings-and-scenarios)
 3. [Simulation code](#3-simulation-code)
 4. [Inference for the proposed estimator *(placeholder)*](#4-inference-for-the-proposed-estimator-placeholder)
-5. [Estimating *pᵢ* *(placeholder)*](#5-estimating-p_i-placeholder)
+5. [Estimating *pᵢ*](#5-estimating-pᵢ)
 6. [Residual false-positive bias and its correction](#6-residual-false-positive-bias-and-its-correction)
 
 Related notes already in the repository:
@@ -762,42 +762,35 @@ coverage in simulation will be added here.
 
 ---
 
-## 5. Estimating *pᵢ* *(placeholder)*
+## 5. Estimating *pᵢ*
 
-Whether *pᵢ* has to be estimated at all depends on the setting. In some
-applications the confirmation step is specified in advance, and *pᵢ* follows from
-that specification rather than from the data at hand.
+Whether *pᵢ* is known or has to be estimated depends on the setting. In some
+applications the confirmation step is specified, and *pᵢ* follows from that
+specification.
 
 Equipment fault monitoring is one such case. A fault is often logged only when an
-alarm repeats on the next inspection cycle, which is the same rule of two
-consecutive signals used here. A genuine fault persists, so it raises the alarm
-again with near certainty. An isolated alarm on a sound machine is a false alarm,
-and its rate is fixed by the sensor design and published by the manufacturer.
-Both parts of the confirmation probability are therefore known before any data
-are collected, and *pᵢ* can be read off the specification.
+alarm repeats on the next inspection cycle, which is similar to the rule of two
+consecutive test results used here. The alarm rate, whether genuine or false, is
+fixed by the sensor design and published by the manufacturer. Both parts of the
+confirmation probability are known before any data are collected.
 
-Where the setting does not pin *pᵢ* down, an external data source often can. A
-validation sample, in which the confirming measurement is observed for everyone,
-reports the operating characteristics of the test directly: sensitivity,
-specificity, and the confirmation rate itself. Published prevalence for the true
-status supplies the remaining ingredient, which is how often a first positive is
-genuine rather than spurious. Assay validation studies, disease registries, and
-earlier cohorts followed long enough for confirmation to be observed are the
-usual sources.
+On the other hand, an external data source can provide useful information to
+derive *pᵢ*. A validation sample may report the operating characteristics of the
+test directly: sensitivity, specificity, and the confirmation rate itself.
+Published prevalence from disease registries can provide true disease status by
+time and tell how often a first positive is genuine rather than spurious. These
+sources often approximate *pᵢ* closely enough that no model is needed. As a last
+resort, *pᵢ* can be estimated from a model fitted to the observed test results in
+the study at hand.
 
-So *pᵢ* can come from either direction. It can be estimated inside the study at
-hand from the observed test results, or imported from external sources of the
-kind just described.
-
-The simulation of §2 does neither. There *pᵢ* is computed exactly from the closed
-form derived in
+In the simulation of §2, *pᵢ* is computed exactly from the closed form derived in
 [`docs/true_p_i_derivation.md`](docs/true_p_i_derivation.md), using the
-false-positive rate ε and the onset rate λ that generated the data. Both are
-known because we chose them. The simplification is deliberate: the figures are
-meant to show how clone-based weighting works, so the weight is held exact and
-the separate problem of estimating *pᵢ* is set aside. Any residual bias in the
-clone-weighted curve of Figure 2 is therefore a property of the event definition,
-discussed in §6, and not error in the weight.
+false-positive rate ε and the onset rate λ that generated the data; both are
+known in the simulation. This simplification is deliberate to focus on how
+clone-based weighting works, so the weight is held exact and the separate problem
+of estimating *pᵢ* is put aside. Any residual bias in the clone-weighted curve of
+Figure 2 is therefore a property of the event definition, discussed in §6, and
+not of a misspecified *pᵢ*.
 
 ---
 
