@@ -832,8 +832,7 @@ and can be rewritten as
 $$
 S(t) = \prod_{k \le t}
 \left\lbrace 1 - \frac{P[Z_0 = k, \ \Delta_0 = 1]}
-{P[Z_0 \ge k]} \right\rbrace .
-\tag{1}
+{P[Z_0 \ge k]} \right\rbrace . \qquad (1)
 $$
 
 Everything in §4.2 is aimed at the two probabilities in equation (1).
@@ -850,14 +849,12 @@ the two cases:
 $$
 Z_{0,i} = (1 - R_i)\min(X_{0,i}, C_i) +
 R_i \mathbf{1}\lbrace Y_i = 1\rbrace X_{1,i} +
-R_i \mathbf{1}\lbrace Y_i = 0\rbrace C_i ,
-\tag{2}
+R_i \mathbf{1}\lbrace Y_i = 0\rbrace C_i , \qquad (2)
 $$
 
 $$
 \Delta_{0,i} = (1 - R_i)\mathbf{1}\lbrace X_{0,i} \le C_i\rbrace +
-R_i \mathbf{1}\lbrace Y_i = 1\rbrace .
-\tag{3}
+R_i \mathbf{1}\lbrace Y_i = 1\rbrace . \qquad (3)
 $$
 
 Everything on the right of these two expressions is observed except $Y_i$.
@@ -925,8 +922,7 @@ Substituting both back into the at-risk probability gives
 $$
 P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k] +
 E[R \mathbf{1}\lbrace X_1 \ge k\rbrace p_i] +
-E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] ,
-\tag{4}
+E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] , \qquad (4)
 $$
 
 which is what the two clones compute: an event clone placed at $X_{1,i}$ and
@@ -940,8 +936,7 @@ with $Y = 0$ has $\Delta_0 = 0$ and cannot contribute, so only two terms remain:
 $$
 P[Z_0 = k, \ \Delta_0 = 1]
  = P[R = 0, \ X_0 = k \le C] +
-E[R \mathbf{1}\lbrace X_1 = k\rbrace p_i] .
-\tag{5}
+E[R \mathbf{1}\lbrace X_1 = k\rbrace p_i] . \qquad (5)
 $$
 
 So $p_i$ enters both the numerator and the denominator, while $1 - p_i$ enters
@@ -966,16 +961,14 @@ $$
  = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} \ge k\rbrace +
 R_i \hat p_i \mathbf{1}\lbrace X_{1,i} \ge k\rbrace +
 R_i (1 - \hat p_i) \mathbf{1}\lbrace C_i \ge k\rbrace
-\Big] ,
-\tag{6}
+\Big] , \qquad (6)
 $$
 
 $$
 \widehat{P}[Z_0 = k, \ \Delta_0 = 1]
  = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} = k, \ \Delta_{0,i} = 1\rbrace +
 R_i \hat p_i \mathbf{1}\lbrace X_{1,i} = k\rbrace
-\Big] .
-\tag{7}
+\Big] . \qquad (7)
 $$
 
 Every term is computable from $O_i$. The first summand is the pair that a
