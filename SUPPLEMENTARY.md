@@ -780,10 +780,14 @@ wherever only one individual is in view. The event of interest is the trigger
 that the confirmation upholds, so $X_{0,i}$ is determined by $X_{1,i}$ and $Y_i$:
 
 $$
-X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1
+X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1, \qquad
+X_{0,i} \;=\; \infty \ \text{ if } Y_i = 0 ,
 $$
 
-A confirmation occurs after a trigger that has already taken place, so by definition
+where $X_{0,i} = \infty$ records that no event of interest occurs.
+
+A confirmation occurs after a trigger that has already taken place, so by
+definition
 
 $$
 X_{1,i} \;<\; X_{2,i} .
