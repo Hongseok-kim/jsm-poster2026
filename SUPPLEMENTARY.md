@@ -831,8 +831,8 @@ and can be rewritten as
 
 $$
 S(t) = \prod_{k \le t}
-\lbrace  1 - \frac{P[Z_0 = k, \ \Delta_0 = 1]}
-{P[Z_0 \ge k]} \rbrace .
+\left\lbrace 1 - \frac{P[Z_0 = k, \ \Delta_0 = 1]}
+{P[Z_0 \ge k]} \right\rbrace .
 \tag{1}
 $$
 
@@ -848,15 +848,15 @@ determined by the unobserved $Y_i$. The pair can therefore be written out across
 the two cases:
 
 $$
-Z_{0,i} = (1 - R_i)\min(X_{0,i}, C_i)
- + R_i \mathbf{1}\lbrace Y_i = 1\rbrace X_{1,i}
- + R_i \mathbf{1}\lbrace Y_i = 0\rbrace C_i ,
+Z_{0,i} = (1 - R_i)\min(X_{0,i}, C_i) +
+R_i \mathbf{1}\lbrace Y_i = 1\rbrace X_{1,i} +
+R_i \mathbf{1}\lbrace Y_i = 0\rbrace C_i ,
 \tag{2}
 $$
 
 $$
-\Delta_{0,i} = (1 - R_i)\mathbf{1}\lbrace X_{0,i} \le C_i\rbrace
- + R_i \mathbf{1}\lbrace Y_i = 1\rbrace .
+\Delta_{0,i} = (1 - R_i)\mathbf{1}\lbrace X_{0,i} \le C_i\rbrace +
+R_i \mathbf{1}\lbrace Y_i = 1\rbrace .
 \tag{3}
 $$
 
@@ -889,9 +889,9 @@ risk, $\sum_i \mathbf{1}\lbrace Z_{0,i} \ge k\rbrace$, whose population counterp
 $P(Z_0 \ge k)$. Substituting (2) and splitting on the three cases gives
 
 $$
-P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k]
- + P[R = 1, \ Y = 1, \ X_1 \ge k]
- + P[R = 1, \ Y = 0, \ C \ge k] .
+P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k] +
+P[R = 1, \ Y = 1, \ X_1 \ge k] +
+P[R = 1, \ Y = 0, \ C \ge k] .
 $$
 
 The three events are disjoint and cover every individual. The first term is computable from the observed data. The other two are
@@ -923,9 +923,9 @@ time $k$ and adding up their individual weights.
 Substituting both back into the at-risk probability gives
 
 $$
-P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k]
- + E[R \mathbf{1}\lbrace X_1 \ge k\rbrace p_i]
- + E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] ,
+P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k] +
+E[R \mathbf{1}\lbrace X_1 \ge k\rbrace p_i] +
+E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] ,
 \tag{4}
 $$
 
@@ -939,8 +939,8 @@ with $Y = 0$ has $\Delta_0 = 0$ and cannot contribute, so only two terms remain:
 
 $$
 P[Z_0 = k, \ \Delta_0 = 1]
- = P[R = 0, \ X_0 = k \le C]
- + E[R \mathbf{1}\lbrace X_1 = k\rbrace p_i] .
+ = P[R = 0, \ X_0 = k \le C] +
+E[R \mathbf{1}\lbrace X_1 = k\rbrace p_i] .
 \tag{5}
 $$
 
@@ -963,17 +963,17 @@ $\hat p_i$ for the known or estimated weight, their sample counterparts are
 
 $$
 \widehat{P}[Z_0 \ge k]
- = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} \ge k\rbrace
- + R_i \hat p_i \mathbf{1}\lbrace X_{1,i} \ge k\rbrace
- + R_i (1 - \hat p_i) \mathbf{1}\lbrace C_i \ge k\rbrace
+ = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} \ge k\rbrace +
+R_i \hat p_i \mathbf{1}\lbrace X_{1,i} \ge k\rbrace +
+R_i (1 - \hat p_i) \mathbf{1}\lbrace C_i \ge k\rbrace
 \Big] ,
 \tag{6}
 $$
 
 $$
 \widehat{P}[Z_0 = k, \ \Delta_0 = 1]
- = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} = k, \ \Delta_{0,i} = 1\rbrace
- + R_i \hat p_i \mathbf{1}\lbrace X_{1,i} = k\rbrace
+ = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} = k, \ \Delta_{0,i} = 1\rbrace +
+R_i \hat p_i \mathbf{1}\lbrace X_{1,i} = k\rbrace
 \Big] .
 \tag{7}
 $$
