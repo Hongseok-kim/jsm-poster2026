@@ -750,8 +750,9 @@ if (SAVE_PLOTS) cat("Figures saved to:", normalizePath(out_dir), "\n")
 
 ## 4. Inference for the proposed estimator *(placeholder)*
 
-> **Work in progress.** This section will cover variance estimation and
-> confidence intervals for the clone-weighted Kaplan–Meier estimator.
+> **Work in progress.** The approach presented here outlines a possible route to
+> inference for the proposed estimator. It is not intended as a rigorous proof.
+> A more rigorous derivation of the inference is in development.
 
 The poster reports point estimates and Monte-Carlo bias. Valid inference must
 account for the induced correlation between an individual's two clones and for
@@ -759,6 +760,98 @@ the uncertainty in the weights *pᵢ* when they are estimated rather than known.
 Candidate approaches (e.g. a nonparametric bootstrap that resamples individuals
 before cloning, or an influence-function / robust variance treatment) and their
 coverage in simulation will be added here.
+
+### 4.1 Setting and notation
+
+The notation is written for a general **trigger and confirmation** structure, so
+that the argument does not depend on the diagnostic-testing example. An event of
+interest is recorded only when a provisional first event is upheld by a
+confirming one.
+
+Notation is local to this section. Every symbol used below is defined below, and
+none of them carries the meaning it has in §§2 and 3, where *R_k*, `R`, and `RE`
+are the simulated test results and `O` the matrix of test times. The right-hand
+column of the table gives the translation into the running example of §2.
+
+| Symbol | Meaning | In the running example |
+| :-- | :-- | :-- |
+| $X_0$ | time of the **event of interest**, a trigger that is confirmed | time of the first of two consecutive positive tests |
+| $X_1$ | time of the **trigger event**, the provisional event that opens a confirmation | time of the first positive test |
+| $X_2$ | time of the **confirmation event** that follows the trigger, that is, the time at which $Y$ is measured | time of the confirmatory test |
+| $Y$ | binary result of the confirmation event: $Y = 1$ confirmed, $Y = 0$ not confirmed | result of the confirmatory test, positive or negative |
+| $C$ | censoring time | administrative end of follow-up at the analysis horizon |
+
+Individuals are indexed by $i = 1, \dots, n$, and the index is suppressed
+wherever only one individual is in view. The event of interest is the trigger
+that the confirmation upholds, so $X_{0,i}$ is determined by $X_{1,i}$ and $Y_i$:
+
+$$
+X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1, \qquad
+X_{0,i} \;=\; \infty \ \text{ if } Y_i = 0 ,
+$$
+
+where $X_{0,i} = \infty$ records that no event of interest occurs. A confirmation
+answers a trigger that has already taken place, so by definition
+
+$$
+X_{1,i} \;<\; X_{2,i} .
+$$
+
+An individual may pass through several trigger events over follow-up. A refuted
+trigger does not end observation, so a later trigger can still arise and be
+confirmed, and the event of interest is the first trigger that is confirmed. For
+simplicity the notation does not carry this complexity, and what follows is
+written for a single trigger and its confirmation.
+
+Let $R_i$ indicate the ambiguous case, in which the trigger is observed but the
+confirmation is not:
+
+$$
+R_i \;=\; \mathbf{1}\{X_{1,i} \le C_i < X_{2,i}\} .
+$$
+
+Observed follow-up is then
+
+$$
+Z_i \;=\; \min(X_{0,i}, C_i), \qquad
+\Delta_i \;=\; \mathbf{1}\{X_{0,i} \le C_i\} .
+$$
+
+The pair $(Z_i, \Delta_i)$ is available only when $R_i = 0$. When $R_i = 1$ the
+value of $Y_i$ is never seen, so $X_{0,i}$ is unknown and the pair is one of two
+possibilities: $(X_{1,i}, 1)$ if $Y_i = 1$, and $(C_i, 0)$ if $Y_i = 0$.
+
+Three configurations can arise by the end of follow-up.
+
+1. **Confirmed event.** $X_{2,i} \le C_i$ and $Y_i = 1$. The event of interest is
+   observed at $Z_i = X_{1,i}$ with $\Delta_i = 1$.
+2. **Refuted trigger.** $X_{2,i} \le C_i$ and $Y_i = 0$. The trigger is not
+   upheld, and no event of interest is recorded at $X_{1,i}$.
+3. **Ambiguous trigger.** $R_i = 1$. The trigger is observed but the confirmation
+   is not, so $Y_i$ is never seen.
+
+The observed data are what survives this masking. For individual $i$ they are
+
+$$
+O_i \;=\; \big(\, R_i, \;\; (1 - R_i) Z_i, \;\; (1 - R_i) \Delta_i, \;\;
+R_i X_{1,i}, \;\; R_i C_i \,\big) .
+$$
+
+For a non-ambiguous individual, $R_i = 0$, this reduces to the usual survival
+pair $(Z_i, \Delta_i)$. For an ambiguous one, $R_i = 1$, it holds the trigger
+time $X_{1,i}$ and the censoring time $C_i$ instead, with $X_{0,i}$ missing.
+The confirmation time $X_{2,i}$ is not recovered either, since it lies beyond
+$C_i$. Those two surviving times are the two candidate rows named above, which is
+what allows an ambiguous individual to be represented by a pair of weighted
+clones rather than by a single row. The indicator $R_i$ is carried in its own
+right, because without it a masked entry could not be told from a genuine zero.
+
+The third configuration is the one this work addresses. It is an *ambiguity*
+rather than sampling uncertainty: nothing about the individual is noisy, and the
+single datum that would settle the event status falls outside the observation
+window. Clone weighting resolves it by splitting the individual into an event
+clone of weight $p_i = P(Y_i = 1 \mid X_{1,i}, \text{observed history})$ and a
+censored clone of weight $1 - p_i$. Where $p_i$ comes from is the subject of §5.
 
 ---
 
