@@ -2,20 +2,22 @@
 
 **Clone-Based Weighting for Future-Dependent Event Definitions**
 Poster — JSM 2026 (Boston, MA). Hongseok Kim, CSL Behring.
+[LinkedIn](https://www.linkedin.com/in/hongseok-kim1/)
 
 This document collects the material that does not fit on the poster: the full
 reference list, a detailed description of the simulation settings and scenarios,
-and the complete simulation code. It closes with a discussion of where the
+the complete simulation code, and a derivation of the proposed estimator from
+the standard Kaplan–Meier formula. It closes with a discussion of where the
 confirmation probability *pᵢ* comes from, and of the residual false-positive
-bias visible in Figure 2 of the poster. One topic is flagged below as work in
-progress: inference for the proposed estimator.
+bias visible in Figure 2 of the poster. Inference for the estimator is still
+under development, as §4 notes.
 
 **Contents**
 
 1. [References](#1-references)
 2. [Simulation settings and scenarios](#2-simulation-settings-and-scenarios)
 3. [Simulation code](#3-simulation-code)
-4. [Inference for the proposed estimator *(placeholder)*](#4-inference-for-the-proposed-estimator-placeholder)
+4. [Inference for the proposed estimator](#4-inference-for-the-proposed-estimator)
 5. [Estimating *pᵢ*](#5-estimating-pᵢ)
 6. [Residual false-positive bias and its correction](#6-residual-false-positive-bias-and-its-correction)
 
@@ -748,30 +750,22 @@ if (SAVE_PLOTS) cat("Figures saved to:", normalizePath(out_dir), "\n")
 
 ---
 
-## 4. Inference for the proposed estimator *(placeholder)*
+## 4. Inference for the proposed estimator
 
 > **Work in progress.** The approach presented here outlines a possible route to
 > inference for the proposed estimator. It is not intended as a rigorous proof.
 > A more rigorous derivation of the inference is in development.
 
-The poster reports point estimates and Monte-Carlo bias. Valid inference must
-account for the induced correlation between an individual's two clones and for
-the uncertainty in the weights *pᵢ* when they are estimated rather than known.
-Candidate approaches (e.g. a nonparametric bootstrap that resamples individuals
-before cloning, or an influence-function / robust variance treatment) and their
-coverage in simulation will be added here.
+The poster reports point estimates and Monte-Carlo bias. This section sets out
+the notation, derives the estimator from the standard Kaplan–Meier formula, and
+briefly describes where inference stands.
 
 ### 4.1 Setting and notation
 
 The notation is written for a general **trigger and confirmation** structure, so
 that the argument does not depend on the diagnostic-testing example. An event of
-interest is recorded only when a provisional first event is upheld by a
-confirming one.
-
-Notation is local to this section. Every symbol used below is defined below, and
-none of them carries the meaning it has in §§2 and 3, where *R_k*, `R`, and `RE`
-are the simulated test results and `O` the matrix of test times. The right-hand
-column of the table gives the translation into the running example of §2.
+interest is recorded only when a provisional first event is followed by a
+confirming one. Notation is local to this section.
 
 | Symbol | Meaning | In the running example |
 | :-- | :-- | :-- |
@@ -786,12 +780,10 @@ wherever only one individual is in view. The event of interest is the trigger
 that the confirmation upholds, so $X_{0,i}$ is determined by $X_{1,i}$ and $Y_i$:
 
 $$
-X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1, \qquad
-X_{0,i} \;=\; \infty \ \text{ if } Y_i = 0 ,
+X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1
 $$
 
-where $X_{0,i} = \infty$ records that no event of interest occurs. A confirmation
-answers a trigger that has already taken place, so by definition
+A confirmation occurs after a trigger that has already taken place, so by definition
 
 $$
 X_{1,i} \;<\; X_{2,i} .
@@ -804,54 +796,241 @@ simplicity the notation does not carry this complexity, and what follows is
 written for a single trigger and its confirmation.
 
 Let $R_i$ indicate the ambiguous case, in which the trigger is observed but the
-confirmation is not:
+confirmation is not, in other words, we cannot verify whether
+$X_{0,i} = X_{1,i}$:
 
 $$
 R_i \;=\; \mathbf{1}\{X_{1,i} \le C_i < X_{2,i}\} .
 $$
 
-Observed follow-up is then
+Take first the pair that an ordinary survival analysis would use:
 
 $$
-Z_i \;=\; \min(X_{0,i}, C_i), \qquad
-\Delta_i \;=\; \mathbf{1}\{X_{0,i} \le C_i\} .
+Z_{0,i} \;=\; \min(X_{0,i}, C_i), \qquad
+\Delta_{0,i} \;=\; \mathbf{1}\{X_{0,i} \le C_i\} .
 $$
 
-The pair $(Z_i, \Delta_i)$ is available only when $R_i = 0$. When $R_i = 1$ the
-value of $Y_i$ is never seen, so $X_{0,i}$ is unknown and the pair is one of two
-possibilities: $(X_{1,i}, 1)$ if $Y_i = 1$, and $(C_i, 0)$ if $Y_i = 0$.
 
-Three configurations can arise by the end of follow-up.
+In our scenario this pair cannot be observed for every individual, because
+$X_{0,i}$ itself may be unknown. The subscript $0$ is deliberate: it marks the
+quantities we would like to have, as against the data actually observed.
 
-1. **Confirmed event.** $X_{2,i} \le C_i$ and $Y_i = 1$. The event of interest is
-   observed at $Z_i = X_{1,i}$ with $\Delta_i = 1$.
-2. **Refuted trigger.** $X_{2,i} \le C_i$ and $Y_i = 0$. The trigger is not
-   upheld, and no event of interest is recorded at $X_{1,i}$.
-3. **Ambiguous trigger.** $R_i = 1$. The trigger is observed but the confirmation
-   is not, so $Y_i$ is never seen.
-
-The observed data are what survives this masking. For individual $i$ they are
+$Z_{0,i}$ and $\Delta_{0,i}$ are what the analysis has to recover from the data.
+Once they are in hand, they can be entered into the ordinary Kaplan–Meier
+formula, which estimates the estimand of interest,
 
 $$
-O_i \;=\; \big(\, R_i, \;\; (1 - R_i) Z_i, \;\; (1 - R_i) \Delta_i, \;\;
-R_i X_{1,i}, \;\; R_i C_i \,\big) .
+S(t) \;=\; P(X_0 > t) .
+$$
+
+and can be rewritten as
+
+$$
+S(t) \;=\; \prod_{k \,\le\, t}
+\left\{\, 1 \;-\; \frac{P\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]}
+{P\big[\, Z_0 \ge k \,\big]} \,\right\} .
+\tag{1}
+$$
+
+Everything in §4.2 is aimed at the two probabilities in equation (1).
+
+The pair $(Z_{0,i}, \Delta_{0,i})$ is available only when $R_i = 0$. When
+$R_i = 1$ the value of $Y_i$ is never seen, so $X_{0,i}$ is unknown and the pair
+is one of two possibilities: $(X_{1,i}, 1)$ if $Y_i = 1$, and $(C_i, 0)$ if
+$Y_i = 0$.
+
+Even though $X_{0,i}$ is not observed in the ambiguous case, we know how it is
+determined by the unobserved $Y_i$. The pair can therefore be written out across
+the two cases:
+
+$$
+Z_{0,i} \;=\; (1 - R_i)\min(X_{0,i}, C_i)
+\;+\; R_i \mathbf{1}\{Y_i = 1\} X_{1,i}
+\;+\; R_i \mathbf{1}\{Y_i = 0\} C_i ,
+\tag{2}
+$$
+
+$$
+\Delta_{0,i} \;=\; (1 - R_i)\mathbf{1}\{X_{0,i} \le C_i\}
+\;+\; R_i \mathbf{1}\{Y_i = 1\} .
+\tag{3}
+$$
+
+Everything on the right of these two expressions is observed except $Y_i$.
+
+For individual $i$ observed data are
+
+$$
+O_i \;=\; \big(\, R_i, \;\; (1 - R_i) Z_{0,i}, \;\; (1 - R_i) \Delta_{0,i},
+\;\; R_i X_{1,i}, \;\; R_i C_i \,\big) .
 $$
 
 For a non-ambiguous individual, $R_i = 0$, this reduces to the usual survival
-pair $(Z_i, \Delta_i)$. For an ambiguous one, $R_i = 1$, it holds the trigger
-time $X_{1,i}$ and the censoring time $C_i$ instead, with $X_{0,i}$ missing.
-The confirmation time $X_{2,i}$ is not recovered either, since it lies beyond
-$C_i$. Those two surviving times are the two candidate rows named above, which is
-what allows an ambiguous individual to be represented by a pair of weighted
-clones rather than by a single row. The indicator $R_i$ is carried in its own
-right, because without it a masked entry could not be told from a genuine zero.
+pair $(Z_{0,i}, \Delta_{0,i})$. For an ambiguous one, $R_i = 1$, it holds the
+trigger time $X_{1,i}$ and the censoring time $C_i$, with $X_{0,i}$
+missing.
 
-The third configuration is the one this work addresses. It is an *ambiguity*
-rather than sampling uncertainty: nothing about the individual is noisy, and the
-single datum that would settle the event status falls outside the observation
-window. Clone weighting resolves it by splitting the individual into an event
-clone of weight $p_i = P(Y_i = 1 \mid X_{1,i}, \text{observed history})$ and a
-censored clone of weight $1 - p_i$. Where $p_i$ comes from is the subject of §5.
+The case $R_i = 1$ is the one this work addresses. It is an *ambiguity* rather
+than sampling uncertainty: nothing about the individual is noisy, and the single
+datum that would settle the event status falls outside the observation window.
+Clone weighting resolves it by splitting the individual into an event clone of
+weight $p_i$ and a censored clone of weight $1 - p_i$. The next subsection makes
+that precise and defines $p_i$.
+
+### 4.2 Estimator derivation
+
+Equation (1) needs two population quantities at each event time $k$. Take the
+denominator first. The Kaplan–Meier estimator counts the individuals still at
+risk, $\sum_i \mathbf{1}\{Z_{0,i} \ge k\}$, whose population counterpart is
+$P(Z_0 \ge k)$. Substituting (2) and splitting on the three cases gives
+
+$$
+P(Z_0 \ge k) \;=\; P\big[\, R = 0, \ \min(X_0, C) \ge k \,\big]
+\;+\; P\big[\, R = 1, \ Y = 1, \ X_1 \ge k \,\big]
+\;+\; P\big[\, R = 1, \ Y = 0, \ C \ge k \,\big] .
+$$
+
+The three events are disjoint and cover every individual. The first term is computable from the observed data. The other two are
+not, because they condition on $Y$, which is never seen when $R = 1$.
+
+Both ambiguous terms can be written exactly by
+conditioning on what is observed. For an individual with $R_i = 1$, let
+
+$$
+p_i \;=\; P\big(\, Y_i = 1 \,\big|\, O_i \,\big)
+$$
+
+be the probability that their trigger would have been confirmed, given
+everything observed about them. Iterated expectation then gives
+
+$$
+P\big[\, R = 1, \ Y = 1, \ X_1 \ge k \,\big]
+\;=\; E\big[\, R \, \mathbf{1}\{X_1 \ge k\} \, p_i \,\big] ,
+$$
+
+$$
+P\big[\, R = 1, \ Y = 0, \ C \ge k \,\big]
+\;=\; E\big[\, R \, \mathbf{1}\{C \ge k\} \, (1 - p_i) \,\big] .
+$$
+
+It simply means walking through the ambiguous individuals still at risk at
+time $k$ and adding up their individual weights.
+
+Substituting both back into the at-risk probability gives
+
+$$
+P(Z_0 \ge k) \;=\; P\big[\, R = 0, \ \min(X_0, C) \ge k \,\big]
+\;+\; E\big[\, R \, \mathbf{1}\{X_1 \ge k\} \, p_i \,\big]
+\;+\; E\big[\, R \, \mathbf{1}\{C \ge k\} \, (1 - p_i) \,\big] ,
+\tag{4}
+$$
+
+which is what the two clones compute: an event clone placed at $X_{1,i}$ and
+carrying weight $p_i$, and a censored clone placed at $C_i$ and carrying weight
+$1 - p_i$.
+
+The numerator follows the same way, from (3). Splitting
+$\{Z_0 = k, \ \Delta_0 = 1\}$ on the same three cases, an ambiguous individual
+with $Y = 0$ has $\Delta_0 = 0$ and cannot contribute, so only two terms remain:
+
+$$
+P\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]
+\;=\; P\big[\, R = 0, \ X_0 = k \le C \,\big]
+\;+\; E\big[\, R \, \mathbf{1}\{X_1 = k\} \, p_i \,\big] .
+\tag{5}
+$$
+
+So $p_i$ enters both the numerator and the denominator, while $1 - p_i$ enters
+the denominator only. That asymmetry is the mechanism: the censored clone extends
+time at risk without producing an event.
+
+The cumulative version, with $Z_0 \le k$ in place of $Z_0 = k$, is derived in the
+same way. It is the form to use when event times are continuous rather than
+confined to the inspection grid.
+
+In both (4) and (5) the only ingredient that is not identifiable from the
+observed data is $p_i$. Everything else is a function of $O_i$. So if $p_i$ is
+known, or can be estimated consistently, substituting it gives consistent
+estimators of $P[Z_0 \ge k]$ and $P[Z_0 = k, \Delta_0 = 1]$, and through (1) a
+consistent estimator of $S(t)$.
+
+Finally, given $O_i$, the two quantities can be estimated directly. Writing
+$\hat p_i$ for the known or estimated weight, their sample counterparts are
+
+$$
+\widehat{P}\big[\, Z_0 \ge k \,\big]
+\;=\; \frac{1}{n}\sum_{i=1}^{n} \Big[\,
+(1 - R_i)\,\mathbf{1}\{Z_{0,i} \ge k\}
+\;+\; R_i \, \hat p_i \, \mathbf{1}\{X_{1,i} \ge k\}
+\;+\; R_i (1 - \hat p_i)\, \mathbf{1}\{C_i \ge k\}
+\,\Big] ,
+\tag{6}
+$$
+
+$$
+\widehat{P}\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]
+\;=\; \frac{1}{n}\sum_{i=1}^{n} \Big[\,
+(1 - R_i)\,\mathbf{1}\{Z_{0,i} = k, \ \Delta_{0,i} = 1\}
+\;+\; R_i \, \hat p_i \, \mathbf{1}\{X_{1,i} = k\}
+\,\Big] .
+\tag{7}
+$$
+
+Every term is computable from $O_i$. The first summand is the pair that a
+non-ambiguous individual supplies directly, and the other two are the trigger and
+censoring times that an ambiguous individual supplies, carrying weights
+$\hat p_i$ and $1 - \hat p_i$. Substituting (6) and (7) into (1) gives the
+clone-weighted estimator of $S(t)$.
+
+This is exactly the cloning construction. Read (6) and (7) as a weighted
+Kaplan–Meier on a dataset holding one row per non-ambiguous individual, at
+$(Z_{0,i}, \Delta_{0,i})$ with weight 1, and two rows per ambiguous individual,
+an event clone at $(X_{1,i}, 1)$ with weight $\hat p_i$ and a censored clone at
+$(C_i, 0)$ with weight $1 - \hat p_i$. That is the dataset
+`build_clone_weighted_data()` assembles in §3, and passing it to a weighted
+Kaplan–Meier routine evaluates (6) and (7) term by term.
+
+The two clones do not double count. Their weights sum to one, so up to the
+trigger time both are at risk and the individual contributes exactly one person
+to the denominator, the same as anybody else. The split takes effect only after
+$X_{1,i}$: a fraction $\hat p_i$ leaves the risk set as an event, and the
+remaining $1 - \hat p_i$ stays at risk until $C_i$. Two rows are needed because an ambiguous
+individual has two possible exit times as well as two possible event statuses,
+and a single row can hold only one exit time.
+
+The same expression also contains the naive double-positive estimator of §2.4,
+the comparator used in the simulation, as the case $\hat p_i = 0$. Every censored
+first-positive is then left as a non-event censored at $C_i$. The formula shows
+directly why that understates the event rate. The numerator (7) loses the term
+$R_i \hat p_i \mathbf{1}\{X_{1,i} = k\}$, so those events are never counted,
+while the denominator (6) keeps the same individuals at risk with full weight all
+the way to $C_i$. Fewer events over an undiminished risk set gives a smaller
+hazard at every $k$, so the survival curve sits too high. That is the negative
+bias of the double-positive curve in Figure 2 of the poster.
+
+Where $p_i$ comes from is the subject of §5.
+
+### 4.3 Inference
+
+Inference for this estimator is a topic for future work. What follows records the
+routes being considered rather than settled results.
+
+The unit of resampling should be the individual. A cluster bootstrap that
+resamples individuals and rebuilds their clones within each replicate accounts
+for the dependence between an individual's two clones.
+
+How the weight is treated then depends on where it came from, following the three
+routes of §5.
+
+- **$p_i$ known.** Treat it as a constant and take bootstrap intervals with the
+  weight plugged in. The only randomness is the sampling of individuals.
+- **$p_i$ taken from an external source.** Draw that source's parameters once per
+  bootstrap replicate, according to their reported variation, and recompute every
+  $p_i$ from the draw. The interval then carries the uncertainty in the external
+  estimate as well as the sampling variability of the study data.
+- **$p_i$ estimated from the study data.** Embed the estimation of $p_i$ inside
+  the bootstrap, refitting it on every resampled dataset, so that the variability
+  of the weight is propagated rather than held fixed.
 
 ---
 
@@ -932,3 +1111,12 @@ left out of this supplement.
   mismeasured outcomes. *Biometrics.* 2003;59(4):947–954.
 - Balasubramanian R, Lagakos SW. Estimation of a failure time distribution based
   on imperfect diagnostic tests. *Biometrika.* 2003;90(1):171–182.
+
+---
+
+**Use of AI tools.** Claude (Anthropic) was used in preparing this repository.
+The conceptual work is the author's throughout, from posing the research question
+to proposing the method that answers it. The tool assisted by expanding and
+critiquing those ideas, editing prose, checking derivations, and writing and
+documenting the simulation code. All modelling choices and final wording are the
+author's, who reviewed and is responsible for everything here.
