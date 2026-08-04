@@ -780,8 +780,8 @@ wherever only one individual is in view. The event of interest is the trigger
 that the confirmation upholds, so $X_{0,i}$ is determined by $X_{1,i}$ and $Y_i$:
 
 $$
-X_{0,i} \;=\; X_{1,i} \ \text{ if } Y_i = 1, \qquad
-X_{0,i} \;=\; \infty \ \text{ if } Y_i = 0 ,
+X_{0,i} = X_{1,i} \ \text{ if } Y_i = 1, \qquad
+X_{0,i} = \infty \ \text{ if } Y_i = 0 ,
 $$
 
 where $X_{0,i} = \infty$ records that no event of interest occurs.
@@ -790,7 +790,7 @@ A confirmation occurs after a trigger that has already taken place, so by
 definition
 
 $$
-X_{1,i} \;<\; X_{2,i} .
+X_{1,i} < X_{2,i} .
 $$
 
 An individual may pass through several trigger events over follow-up. A refuted
@@ -804,14 +804,14 @@ confirmation is not, in other words, we cannot verify whether
 $X_{0,i} = X_{1,i}$:
 
 $$
-R_i \;=\; \mathbf{1}\{X_{1,i} \le C_i < X_{2,i}\} .
+R_i = \mathbf{1}\lbrace X_{1,i} \le C_i < X_{2,i}\rbrace .
 $$
 
 Take first the pair that an ordinary survival analysis would use:
 
 $$
-Z_{0,i} \;=\; \min(X_{0,i}, C_i), \qquad
-\Delta_{0,i} \;=\; \mathbf{1}\{X_{0,i} \le C_i\} .
+Z_{0,i} = \min(X_{0,i}, C_i), \qquad
+\Delta_{0,i} = \mathbf{1}\lbrace X_{0,i} \le C_i\rbrace .
 $$
 
 
@@ -824,15 +824,15 @@ Once they are in hand, they can be entered into the ordinary Kaplan–Meier
 formula, which estimates the estimand of interest,
 
 $$
-S(t) \;=\; P(X_0 > t) .
+S(t) = P(X_0 > t) .
 $$
 
 and can be rewritten as
 
 $$
-S(t) \;=\; \prod_{k \,\le\, t}
-\left\{\, 1 \;-\; \frac{P\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]}
-{P\big[\, Z_0 \ge k \,\big]} \,\right\} .
+S(t) = \prod_{k \le t}
+\lbrace  1 - \frac{P[Z_0 = k, \ \Delta_0 = 1]}
+{P[Z_0 \ge k]} \rbrace .
 \tag{1}
 $$
 
@@ -848,15 +848,15 @@ determined by the unobserved $Y_i$. The pair can therefore be written out across
 the two cases:
 
 $$
-Z_{0,i} \;=\; (1 - R_i)\min(X_{0,i}, C_i)
-\;+\; R_i \mathbf{1}\{Y_i = 1\} X_{1,i}
-\;+\; R_i \mathbf{1}\{Y_i = 0\} C_i ,
+Z_{0,i} = (1 - R_i)\min(X_{0,i}, C_i)
+ + R_i \mathbf{1}\lbrace Y_i = 1\rbrace X_{1,i}
+ + R_i \mathbf{1}\lbrace Y_i = 0\rbrace C_i ,
 \tag{2}
 $$
 
 $$
-\Delta_{0,i} \;=\; (1 - R_i)\mathbf{1}\{X_{0,i} \le C_i\}
-\;+\; R_i \mathbf{1}\{Y_i = 1\} .
+\Delta_{0,i} = (1 - R_i)\mathbf{1}\lbrace X_{0,i} \le C_i\rbrace
+ + R_i \mathbf{1}\lbrace Y_i = 1\rbrace .
 \tag{3}
 $$
 
@@ -865,8 +865,8 @@ Everything on the right of these two expressions is observed except $Y_i$.
 For individual $i$ observed data are
 
 $$
-O_i \;=\; \big(\, R_i, \;\; (1 - R_i) Z_{0,i}, \;\; (1 - R_i) \Delta_{0,i},
-\;\; R_i X_{1,i}, \;\; R_i C_i \,\big) .
+O_i = (R_i, (1 - R_i) Z_{0,i}, (1 - R_i) \Delta_{0,i},
+ R_i X_{1,i}, R_i C_i) .
 $$
 
 For a non-ambiguous individual, $R_i = 0$, this reduces to the usual survival
@@ -885,13 +885,13 @@ that precise and defines $p_i$.
 
 Equation (1) needs two population quantities at each event time $k$. Take the
 denominator first. The Kaplan–Meier estimator counts the individuals still at
-risk, $\sum_i \mathbf{1}\{Z_{0,i} \ge k\}$, whose population counterpart is
+risk, $\sum_i \mathbf{1}\lbrace Z_{0,i} \ge k\rbrace$, whose population counterpart is
 $P(Z_0 \ge k)$. Substituting (2) and splitting on the three cases gives
 
 $$
-P(Z_0 \ge k) \;=\; P\big[\, R = 0, \ \min(X_0, C) \ge k \,\big]
-\;+\; P\big[\, R = 1, \ Y = 1, \ X_1 \ge k \,\big]
-\;+\; P\big[\, R = 1, \ Y = 0, \ C \ge k \,\big] .
+P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k]
+ + P[R = 1, \ Y = 1, \ X_1 \ge k]
+ + P[R = 1, \ Y = 0, \ C \ge k] .
 $$
 
 The three events are disjoint and cover every individual. The first term is computable from the observed data. The other two are
@@ -901,20 +901,20 @@ Both ambiguous terms can be written exactly by
 conditioning on what is observed. For an individual with $R_i = 1$, let
 
 $$
-p_i \;=\; P\big(\, Y_i = 1 \,\big|\, O_i \,\big)
+p_i = P(Y_i = 1 \mid O_i)
 $$
 
 be the probability that their trigger would have been confirmed, given
 everything observed about them. Iterated expectation then gives
 
 $$
-P\big[\, R = 1, \ Y = 1, \ X_1 \ge k \,\big]
-\;=\; E\big[\, R \, \mathbf{1}\{X_1 \ge k\} \, p_i \,\big] ,
+P[R = 1, \ Y = 1, \ X_1 \ge k]
+ = E[R \mathbf{1}\lbrace X_1 \ge k\rbrace p_i] ,
 $$
 
 $$
-P\big[\, R = 1, \ Y = 0, \ C \ge k \,\big]
-\;=\; E\big[\, R \, \mathbf{1}\{C \ge k\} \, (1 - p_i) \,\big] .
+P[R = 1, \ Y = 0, \ C \ge k]
+ = E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] .
 $$
 
 It simply means walking through the ambiguous individuals still at risk at
@@ -923,9 +923,9 @@ time $k$ and adding up their individual weights.
 Substituting both back into the at-risk probability gives
 
 $$
-P(Z_0 \ge k) \;=\; P\big[\, R = 0, \ \min(X_0, C) \ge k \,\big]
-\;+\; E\big[\, R \, \mathbf{1}\{X_1 \ge k\} \, p_i \,\big]
-\;+\; E\big[\, R \, \mathbf{1}\{C \ge k\} \, (1 - p_i) \,\big] ,
+P(Z_0 \ge k) = P[R = 0, \ \min(X_0, C) \ge k]
+ + E[R \mathbf{1}\lbrace X_1 \ge k\rbrace p_i]
+ + E[R \mathbf{1}\lbrace C \ge k\rbrace (1 - p_i)] ,
 \tag{4}
 $$
 
@@ -934,13 +934,13 @@ carrying weight $p_i$, and a censored clone placed at $C_i$ and carrying weight
 $1 - p_i$.
 
 The numerator follows the same way, from (3). Splitting
-$\{Z_0 = k, \ \Delta_0 = 1\}$ on the same three cases, an ambiguous individual
+$\lbrace Z_0 = k, \ \Delta_0 = 1\rbrace$ on the same three cases, an ambiguous individual
 with $Y = 0$ has $\Delta_0 = 0$ and cannot contribute, so only two terms remain:
 
 $$
-P\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]
-\;=\; P\big[\, R = 0, \ X_0 = k \le C \,\big]
-\;+\; E\big[\, R \, \mathbf{1}\{X_1 = k\} \, p_i \,\big] .
+P[Z_0 = k, \ \Delta_0 = 1]
+ = P[R = 0, \ X_0 = k \le C]
+ + E[R \mathbf{1}\lbrace X_1 = k\rbrace p_i] .
 \tag{5}
 $$
 
@@ -962,21 +962,19 @@ Finally, given $O_i$, the two quantities can be estimated directly. Writing
 $\hat p_i$ for the known or estimated weight, their sample counterparts are
 
 $$
-\widehat{P}\big[\, Z_0 \ge k \,\big]
-\;=\; \frac{1}{n}\sum_{i=1}^{n} \Big[\,
-(1 - R_i)\,\mathbf{1}\{Z_{0,i} \ge k\}
-\;+\; R_i \, \hat p_i \, \mathbf{1}\{X_{1,i} \ge k\}
-\;+\; R_i (1 - \hat p_i)\, \mathbf{1}\{C_i \ge k\}
-\,\Big] ,
+\widehat{P}[Z_0 \ge k]
+ = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} \ge k\rbrace
+ + R_i \hat p_i \mathbf{1}\lbrace X_{1,i} \ge k\rbrace
+ + R_i (1 - \hat p_i) \mathbf{1}\lbrace C_i \ge k\rbrace
+\Big] ,
 \tag{6}
 $$
 
 $$
-\widehat{P}\big[\, Z_0 = k, \ \Delta_0 = 1 \,\big]
-\;=\; \frac{1}{n}\sum_{i=1}^{n} \Big[\,
-(1 - R_i)\,\mathbf{1}\{Z_{0,i} = k, \ \Delta_{0,i} = 1\}
-\;+\; R_i \, \hat p_i \, \mathbf{1}\{X_{1,i} = k\}
-\,\Big] .
+\widehat{P}[Z_0 = k, \ \Delta_0 = 1]
+ = \frac{1}{n}\sum_{i=1}^{n} \Big[(1 - R_i)\mathbf{1}\lbrace Z_{0,i} = k, \ \Delta_{0,i} = 1\rbrace
+ + R_i \hat p_i \mathbf{1}\lbrace X_{1,i} = k\rbrace
+\Big] .
 \tag{7}
 $$
 
@@ -1006,7 +1004,7 @@ The same expression also contains the naive double-positive estimator of §2.4,
 the comparator used in the simulation, as the case $\hat p_i = 0$. Every censored
 first-positive is then left as a non-event censored at $C_i$. The formula shows
 directly why that understates the event rate. The numerator (7) loses the term
-$R_i \hat p_i \mathbf{1}\{X_{1,i} = k\}$, so those events are never counted,
+$R_i \hat p_i \mathbf{1}\lbrace X_{1,i} = k\rbrace$, so those events are never counted,
 while the denominator (6) keeps the same individuals at risk with full weight all
 the way to $C_i$. Fewer events over an undiminished risk set gives a smaller
 hazard at every $k$, so the survival curve sits too high. That is the negative
